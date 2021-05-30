@@ -1,0 +1,40 @@
+.body {
+    display: flex;
+    flex-direction: row;
+}
+
+.figure {
+    width: 50%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+    height: 100vh;
+    padding-left: 50px;
+    margin-top: 170px;
+}
+
+.indicateurs {
+    height: 400px;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.indicateur-speed {
+    height: 200px;
+    width: auto;
+}
+
+.indicateur-distance {
+    height: 200px;
+    width: auto;
+}
+
+.modebar {
+    display: none !important;
+}

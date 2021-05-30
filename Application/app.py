@@ -9,8 +9,8 @@ from Capsule import Capsule
 
 
 # Initialisation de l'application web
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+external_stylesheet = ['./assets/base.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheet)
 
 # Initialisation de la capsule
 capsule = Capsule(0)
@@ -25,8 +25,9 @@ fig = go.Figure(data=[go.Scatter(x=x_circuit,
                 layout=go.Layout(xaxis=dict(range=[xcm, xcM], autorange=False, zeroline=False, showgrid=False, showticklabels=False),
                                 yaxis=dict(range=[ycm, ycM], autorange=False, zeroline=False, showgrid=False, showticklabels=False, scaleanchor='x', scaleratio=1),
                                 autosize=False,
-                                width=1000,
-                                height=1000,
+                                width=800,
+                                height=800,
+                                margin=dict(l=0, r=50, b=0, t=0, pad=0),
                                 showlegend=False,
                                 hovermode='closest'))
 
@@ -47,33 +48,24 @@ fig.add_layout_image(dict(source="./assets/circuit.png",
 fig.update_layout(template="plotly_white")
 
 # Corps de la page
-app.layout = html.Div(children=[
-                            # Header
-                            html.Div(id='header',
-                                    children = [html.Img(id='logo',
-                                                        src=app.get_asset_url('./logo.png'),
-                                                        width='250')],
-                                    style = {'display': 'flex',
-                                            'flex-direction': 'column',
-                                            'align-items': 'center'}),
-                            
-                            # Visualisation de la vitesse de la capsule
-                            html.Div(children = dcc.Graph(id='live-update-speed')),
-
-                            # Visualisation de la distance parcourue
-                            html.Div(children = dcc.Graph(id='live-update-distance')),
-
+app.layout = html.Div(className='body',
+                    children=[
                             # Visualisation du circuit test
-                            html.Div(children = dcc.Graph(id='live-update-graph'),
-                                    style={}),
+                            html.Div(className='figure', children = dcc.Graph(id='live-update-graph')),
+
+                            # Div de placement sur la page
+                            html.Div(className='content', children = [html.Div(className='header',
+                                                                            children = [html.Img(id='logo',
+                                                                            src=app.get_asset_url('./logo.png'),
+                                                                            width='250')]),
+                                                                    html.Div(className='indicateurs',
+                                                                            children = [html.Div(className='indicateur-speed', children = dcc.Graph(id='live-update-speed')),
+                                                                                        html.Div(className='indicateur-distance', children = dcc.Graph(id='live-update-distance'))]),]),                    
 
                             # Actualisation de la page toutes les 200 millisecondes
                             dcc.Interval(id='interval-component',
                                         interval=200, # in milliseconds
-                                        n_intervals=0)],
-                    style={'display': 'flex',
-                            'flex-direction': 'column',
-                            'align-items': 'center'})
+                                        n_intervals=0)])
 
 
 
@@ -111,6 +103,10 @@ def update_graph_live(n):
                                     domain = {'x': [0, 1], 'y': [0, 1]},
                                     gauge = {'axis': {'range': [None, 80]}}))
 
+    compteur.update_layout(width=200,
+                        height=300,
+                        margin=dict(l=0, r=0, b=0, t=0, pad=0))
+
     # Création de la jauge de distance
     distance = go.Figure(go.Indicator(mode = 'gauge+number',
                                     value = abs_curviligne,
@@ -118,6 +114,10 @@ def update_graph_live(n):
                                     domain = {'x': [0, 1], 'y': [0.4, 0.6]},
                                     gauge = {'axis': {'range': [None, 300]},
                                             'shape': "bullet",}))
+
+    distance.update_layout(width=750,
+                        height=200,
+                        margin=dict(l=250, r=0, b=0, t=0, pad=0))
 
     # Affichage de la capsule
     fig.add_scatter(x=[capsule.x], y=[capsule.y], mode='markers', name="Capsule #1", marker=dict(size = 15), fillcolor='red')
