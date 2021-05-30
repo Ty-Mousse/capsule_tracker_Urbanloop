@@ -5,6 +5,7 @@ class Capsule():
     
     # Constructeur de la classe répertoriant les données importantes
     def __init__(self, abs_initiale):
+        self.abs_initiale = abs_initiale
         self.abs_curviligne = abs_initiale
         self.x, self.y = get_coordonates(abs_initiale)
         self.vitesse = 0
